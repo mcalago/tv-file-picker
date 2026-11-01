@@ -19,7 +19,8 @@ The UI follows the device language: English by default, Turkish included. More t
 It also ships a full `DocumentsProvider` (create, rename, delete, move, copy), so apps can keep reading and
 writing inside the folder you picked, for example config files, save data and save states.
 
-Only internal storage (`/sdcard`) is shown. The provider is protected by `MANAGE_DOCUMENTS`, so other apps
+Internal storage, SD cards and USB drives are all shown. When more than one volume is mounted the picker starts
+on a volume list; with only internal storage it opens that directly. The provider is protected by `MANAGE_DOCUMENTS`, so other apps
 cannot browse your storage; they only reach what the picker explicitly grants them.
 
 ## Install (for users)
@@ -64,6 +65,7 @@ Never commit `tvpicker.jks` or the passwords.
 | Lemuroid | Verified: folder selection and opening games (ROM reading) |
 | RetroArch | Verified: folder selection lists the folder and its files (press "Always" in the chooser, see Troubleshooting) |
 | Saving (`CREATE_DOCUMENT`) | Implemented, not yet tested |
+| SD card / USB drive | Implemented, not yet tested on a device |
 
 If you try another app, please open an issue with the app name, version, intent and logcat output.
 
@@ -76,7 +78,7 @@ press **Always** once; after that the picker is launched directly and works.
 
 ## Limitations
 
-- Internal storage only (`/sdcard`). SD cards and USB drives are not supported.
+- SD card and USB drive support is implemented but has not been tested on real hardware yet. Reports are welcome.
 - Because of Android 11+ package visibility, the calling app may need a `<queries>` entry in its manifest.
 
 ## Legal

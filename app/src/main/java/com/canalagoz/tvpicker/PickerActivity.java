@@ -38,7 +38,8 @@ import java.util.Set;
  */
 public class PickerActivity extends Activity {
 
-    private static final String ROOT = "primary:";
+    /** Virtual top level that lists every mounted volume (internal storage, SD cards, USB drives). */
+    private static final String ROOT = StorageProvider.TOP;
     private static final int JUMP = 15;
 
     private enum Mode { OPEN_FILE, OPEN_TREE, CREATE }
@@ -55,11 +56,14 @@ public class PickerActivity extends Activity {
     private ListView listView;
     private Button upButton;
     private Button actionButton;
+    private Button newFolderButton;
 
     private Mode mode;
     private boolean allowMultiple;
     private String suggestedName;
     private String currentDocId = ROOT;
+    /** True when more than one volume is mounted, so "Up" from a volume root returns to the volume list. */
+    private boolean multiVolume;
 
     private static class Entry {
         final String docId;
@@ -87,7 +91,7 @@ public class PickerActivity extends Activity {
         listView = findViewById(R.id.list);
         upButton = findViewById(R.id.up_folder);
         actionButton = findViewById(R.id.select_folder);
-        Button newFolderButton = findViewById(R.id.new_folder);
+        newFolderButton = findViewById(R.id.new_folder);
 
         upButton.setOnClickListener(v -> goUp());
         newFolderButton.setOnClickListener(v -> askNewFolderName());
@@ -176,7 +180,7 @@ public class PickerActivity extends Activity {
 
     private void load(String docId) {
         currentDocId = docId;
-        pathView.setText("/" + docId.replaceFirst("^primary:", ""));
+        pathView.setText(displayPath(docId));
 
         new Thread(() -> {
             List<Entry> loaded = new ArrayList<>();
@@ -199,6 +203,18 @@ public class PickerActivity extends Activity {
                 runOnUiThread(() -> Toast.makeText(this, R.string.toast_read_failed, Toast.LENGTH_SHORT).show());
             }
 
+            if (ROOT.equals(docId)) {
+                if (loaded.size() == 1) {
+                    // Only internal storage is mounted: skip the volume list.
+                    String only = loaded.get(0).docId;
+                    runOnUiThread(() -> {
+                        multiVolume = false;
+                        load(only);
+                    });
+                    return;
+                }
+                multiVolume = true;
+            }
             runOnUiThread(() -> show(loaded));
         }).start();
     }
@@ -207,6 +223,10 @@ public class PickerActivity extends Activity {
         entries.clear();
         entries.addAll(loaded);
         upButton.setEnabled(parentOf(currentDocId) != null);
+        // Nothing can be created or selected on the volume list itself.
+        boolean volumeList = ROOT.equals(currentDocId);
+        actionButton.setEnabled(!volumeList);
+        newFolderButton.setEnabled(!volumeList);
         countView.setText(getResources().getQuantityString(R.plurals.item_count, entries.size(), entries.size()));
         refreshLabels();
         emptyView.setVisibility(entries.isEmpty() ? View.VISIBLE : View.GONE);
@@ -223,14 +243,30 @@ public class PickerActivity extends Activity {
         }
     }
 
-    /** "primary:Download/psp" -> "primary:Download"; null at the root. */
-    private static String parentOf(String docId) {
-        String rel = docId.replaceFirst("^primary:", "");
-        if (rel.isEmpty()) {
+    /** "primary:Download/psp" -> "primary:Download"; a volume root goes up to the volume list. */
+    private String parentOf(String docId) {
+        if (ROOT.equals(docId)) {
             return null;
         }
+        int colon = docId.indexOf(':');
+        String prefix = docId.substring(0, colon + 1);
+        String rel = docId.substring(colon + 1);
+        if (rel.isEmpty()) {
+            return multiVolume ? ROOT : null;
+        }
         int idx = rel.lastIndexOf('/');
-        return idx < 0 ? ROOT : ROOT + rel.substring(0, idx);
+        return idx < 0 ? prefix : prefix + rel.substring(0, idx);
+    }
+
+    /** "primary:Download/psp" -> "/Download/psp"; other volumes get their key in front. */
+    private static String displayPath(String docId) {
+        if (ROOT.equals(docId)) {
+            return "/";
+        }
+        int colon = docId.indexOf(':');
+        String volume = docId.substring(0, colon);
+        String rel = docId.substring(colon + 1);
+        return ("primary".equals(volume) ? "" : "[" + volume + "] ") + "/" + rel;
     }
 
     private void goUp() {

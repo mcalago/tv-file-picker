@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TV File Picker</string>
-    <string name="picker_root_title">Storage</string>
+    <string name="picker_root_title">Internal storage</string>
     <string name="picker_empty">No files to show in this folder</string>
 
     <string name="btn_up">Up</string>

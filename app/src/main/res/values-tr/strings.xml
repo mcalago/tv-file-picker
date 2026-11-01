@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">TV Dosya Seçici</string>
-    <string name="picker_root_title">Depolama</string>
+    <string name="picker_root_title">Dahili depolama</string>
     <string name="picker_empty">Bu klasörde gösterilecek dosya yok</string>
 
     <string name="btn_up">Üst klasör</string>

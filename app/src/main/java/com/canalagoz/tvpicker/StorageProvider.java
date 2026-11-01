@@ -1,10 +1,14 @@
 package com.canalagoz.tvpicker;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.database.MatrixCursor;
+import android.os.Build;
 import android.os.CancellationSignal;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
+import android.os.storage.StorageManager;
+import android.os.storage.StorageVolume;
 import android.provider.DocumentsContract.Document;
 import android.provider.DocumentsContract.Root;
 import android.provider.DocumentsProvider;
@@ -16,19 +20,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Our own SAF provider for devices that ship without the system DocumentsUI.
  *
- * Document IDs are the "primary:" prefix plus a path relative to the storage root
- * (e.g. "primary:Download/psp"), the same format ExternalStorageProvider uses. Apps such as
+ * Document IDs are a volume key plus ":" plus a path relative to that volume's root
+ * (e.g. "primary:Download/psp" or "1234-ABCD:Games"), the same format ExternalStorageProvider uses. Apps such as
  * PPSSPP join IDs like paths, so absolute paths used to break them.
  */
 public class StorageProvider extends DocumentsProvider {
 
     public static final String AUTHORITY = "com.canalagoz.tvpicker.docs";
-    private static final String ROOT_ID = "storage";
-    private static final String PREFIX = "primary:";
+    /** Key of the internal storage volume. */
+    private static final String PRIMARY = "primary";
+    /** Virtual top-level document that lists every mounted volume (used by our own picker). */
+    static final String TOP = "storage:";
     private static final String TAG = "TVPicker";
 
     private static final String[] ROOT_COLUMNS = {
@@ -52,16 +60,84 @@ public class StorageProvider extends DocumentsProvider {
         return true;
     }
 
+    /** A mounted storage volume: internal storage, an SD card or a USB drive. */
+    private static final class Volume {
+        final String label;
+        final File dir;
+
+        Volume(String label, File dir) {
+            this.label = label;
+            this.dir = dir;
+        }
+    }
+
+    /** Mounted volumes by key: "primary" first, then removable ones by UUID. */
+    private Map<String, Volume> volumes() {
+        Map<String, Volume> map = new LinkedHashMap<>();
+        Context ctx = getContext();
+        map.put(PRIMARY, new Volume(ctx.getString(R.string.picker_root_title),
+                Environment.getExternalStorageDirectory()));
+
+        StorageManager sm = ctx.getSystemService(StorageManager.class);
+        if (sm == null) {
+            return map;
+        }
+        for (StorageVolume v : sm.getStorageVolumes()) {
+            if (v.isPrimary()) {
+                continue;
+            }
+            String state = v.getState();
+            if (!Environment.MEDIA_MOUNTED.equals(state)
+                    && !Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+                continue;
+            }
+            String uuid = v.getUuid();
+            File dir = volumeDir(v);
+            if (uuid == null || dir == null || !dir.isDirectory()) {
+                continue;
+            }
+            map.put(uuid, new Volume(v.getDescription(ctx), dir));
+        }
+        return map;
+    }
+
+    private static File volumeDir(StorageVolume v) {
+        if (Build.VERSION.SDK_INT >= 30) {
+            return v.getDirectory();
+        }
+        try {
+            String path = (String) StorageVolume.class.getMethod("getPath").invoke(v);
+            return path == null ? null : new File(path);
+        } catch (ReflectiveOperationException e) {
+            return null;
+        }
+    }
+
     /**
      * Some apps (e.g. Lemuroid "browse") join the ID twice, as parent + child:
-     * "primary:A/primary:A/x" -> "primary:A/x". The last "primary:" prefix starts the real ID.
+     * "primary:A/primary:A/x" -> "primary:A/x". The last volume prefix at a path-segment
+     * boundary starts the real ID. Only known volume keys count, so a file name that
+     * happens to contain a colon is left alone.
      */
-    private static String normalize(String id) {
+    private String normalize(String id) {
         if (id == null) {
             return null;
         }
-        int last = id.lastIndexOf(PREFIX);
-        return last > 0 ? id.substring(last) : id;
+        int best = 0;
+        for (String key : volumes().keySet()) {
+            String prefix = key + ":";
+            int i = id.lastIndexOf(prefix);
+            while (i > 0 && id.charAt(i - 1) != '/') {
+                i = id.lastIndexOf(prefix, i - 1);
+            }
+            best = Math.max(best, i);
+        }
+        return id.substring(best);
+    }
+
+    /** "primary:" / "1234-ABCD:" are volume roots. */
+    private static boolean isRoot(String id) {
+        return id != null && id.indexOf(':') == id.length() - 1;
     }
 
     /** Column order must follow the client's projection (PPSSPP reads columns by index). */
@@ -69,18 +145,14 @@ public class StorageProvider extends DocumentsProvider {
         return projection != null ? projection : DOC_COLUMNS;
     }
 
-    private File baseDir() {
-        return Environment.getExternalStorageDirectory();
-    }
-
     /** The storage root can't be deleted, moved or renamed. */
     private static void rejectRoot(String documentId) throws FileNotFoundException {
-        if (PREFIX.equals(documentId)) {
+        if (isRoot(documentId)) {
             throw new FileNotFoundException("The root cannot be modified");
         }
     }
 
-    /** Parent ID + name = child ID. No separator is added for the root ("primary:"). */
+    /** Parent ID + name = child ID. No separator is added after a volume root ("primary:"). */
     private static String childId(String parentId, String name) {
         if (parentId.endsWith(":") || parentId.endsWith("/")) {
             return parentId + name;
@@ -88,13 +160,15 @@ public class StorageProvider extends DocumentsProvider {
         return parentId + "/" + name;
     }
 
-    /** Maps an ID to a file and refuses to leave the storage root. */
+    /** Maps an ID to a file and refuses to leave its volume. */
     private File resolve(String documentId) throws FileNotFoundException {
-        if (documentId == null || !documentId.startsWith(PREFIX)) {
+        int colon = documentId == null ? -1 : documentId.indexOf(':');
+        Volume volume = colon < 0 ? null : volumes().get(documentId.substring(0, colon));
+        if (volume == null) {
             throw new FileNotFoundException("Invalid document: " + documentId);
         }
-        String rel = documentId.substring(PREFIX.length());
-        File base = baseDir();
+        String rel = documentId.substring(colon + 1);
+        File base = volume.dir;
         File file = rel.isEmpty() ? base : new File(base, rel);
         try {
             String basePath = base.getCanonicalPath();
@@ -114,11 +188,13 @@ public class StorageProvider extends DocumentsProvider {
     @Override
     public Cursor queryRoots(String[] projection) {
         MatrixCursor cursor = new MatrixCursor(ROOT_COLUMNS);
-        cursor.newRow()
-                .add(Root.COLUMN_ROOT_ID, ROOT_ID)
-                .add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY | Root.FLAG_SUPPORTS_CREATE)
-                .add(Root.COLUMN_TITLE, "Depolama")
-                .add(Root.COLUMN_DOCUMENT_ID, PREFIX);
+        for (Map.Entry<String, Volume> e : volumes().entrySet()) {
+            cursor.newRow()
+                    .add(Root.COLUMN_ROOT_ID, e.getKey())
+                    .add(Root.COLUMN_FLAGS, Root.FLAG_LOCAL_ONLY | Root.FLAG_SUPPORTS_CREATE)
+                    .add(Root.COLUMN_TITLE, e.getValue().label)
+                    .add(Root.COLUMN_DOCUMENT_ID, e.getKey() + ":");
+        }
         return cursor;
     }
 
@@ -126,6 +202,11 @@ public class StorageProvider extends DocumentsProvider {
     public Cursor queryDocument(String documentId, String[] projection) throws FileNotFoundException {
         documentId = normalize(documentId);
         MatrixCursor cursor = new MatrixCursor(columns(projection));
+        if (TOP.equals(documentId)) {
+            addRow(cursor, TOP, getContext().getString(R.string.picker_root_title),
+                    Document.MIME_TYPE_DIR, null, 0, 0);
+            return cursor;
+        }
         includeFile(cursor, documentId, resolve(documentId));
         return cursor;
     }
@@ -134,8 +215,17 @@ public class StorageProvider extends DocumentsProvider {
     public Cursor queryChildDocuments(String parentDocumentId, String[] projection, String sortOrder)
             throws FileNotFoundException {
         parentDocumentId = normalize(parentDocumentId);
-        File parent = resolve(parentDocumentId);
         MatrixCursor cursor = new MatrixCursor(columns(projection));
+
+        if (TOP.equals(parentDocumentId)) {
+            for (Map.Entry<String, Volume> e : volumes().entrySet()) {
+                addRow(cursor, e.getKey() + ":", e.getValue().label, Document.MIME_TYPE_DIR, null,
+                        e.getValue().dir.lastModified(), Document.FLAG_DIR_SUPPORTS_CREATE);
+            }
+            return cursor;
+        }
+
+        File parent = resolve(parentDocumentId);
 
         File[] children = parent.listFiles();
         if (children == null) {
@@ -227,7 +317,9 @@ public class StorageProvider extends DocumentsProvider {
         }
         android.util.Log.d(TAG, "renameDocument " + src + " -> " + dst);
         int slash = documentId.lastIndexOf('/');
-        return slash < 0 ? PREFIX + safe : documentId.substring(0, slash + 1) + safe;
+        return slash < 0
+                ? documentId.substring(0, documentId.indexOf(':') + 1) + safe
+                : documentId.substring(0, slash + 1) + safe;
     }
 
     @Override
@@ -347,19 +439,25 @@ public class StorageProvider extends DocumentsProvider {
     }
 
     private void includeFile(MatrixCursor cursor, String docId, File file) {
-        String name = docId.equals(PREFIX) ? "Depolama" : file.getName();
+        boolean root = isRoot(docId);
+        String name = root ? volumes().get(docId.substring(0, docId.length() - 1)).label : file.getName();
         boolean dir = file.isDirectory();
         String mime = dir ? Document.MIME_TYPE_DIR : mimeOf(file);
-        int flags = (docId.equals(PREFIX) ? 0 : Document.FLAG_SUPPORTS_MOVE | Document.FLAG_SUPPORTS_COPY
+        int flags = (root ? 0 : Document.FLAG_SUPPORTS_MOVE | Document.FLAG_SUPPORTS_COPY
                 | Document.FLAG_SUPPORTS_RENAME | Document.FLAG_SUPPORTS_DELETE)
                 | (dir ? Document.FLAG_DIR_SUPPORTS_CREATE : Document.FLAG_SUPPORTS_WRITE);
+        addRow(cursor, docId, name, mime, file.isFile() ? file.length() : null, file.lastModified(), flags);
+    }
 
-        java.util.Map<String, Object> values = new java.util.HashMap<>();
+    /** Adds one row in the cursor's own column order (clients may request any projection). */
+    private static void addRow(MatrixCursor cursor, String docId, String name, String mime,
+                               Long size, long lastModified, int flags) {
+        Map<String, Object> values = new java.util.HashMap<>();
         values.put(Document.COLUMN_DOCUMENT_ID, docId);
         values.put(Document.COLUMN_DISPLAY_NAME, name);
         values.put(Document.COLUMN_MIME_TYPE, mime);
-        values.put(Document.COLUMN_SIZE, file.isFile() ? file.length() : null);
-        values.put(Document.COLUMN_LAST_MODIFIED, file.lastModified());
+        values.put(Document.COLUMN_SIZE, size);
+        values.put(Document.COLUMN_LAST_MODIFIED, lastModified);
         values.put(Document.COLUMN_FLAGS, flags);
 
         MatrixCursor.RowBuilder row = cursor.newRow();

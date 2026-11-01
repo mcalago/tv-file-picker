@@ -14,7 +14,8 @@ gönderdiğinde bu uygulama cevap verir.
 | `OPEN_DOCUMENT_TREE` | Klasör seçtirir, kalıcı okuma/yazma izni verir (Lemuroid gibi uygulamalar için). |
 | `CREATE_DOCUMENT` | Klasör seçtirir ve `EXTRA_TITLE` adıyla yeni dosya oluşturur. |
 
-Yalnızca `/sdcard` (dahili depolama) altını gösterir. Dışa kapalı sağlayıcı kullanır, diğer uygulamalar
+Dahili depolamayı, SD kartları ve USB belleklerini gösterir. Birden fazla birim takılıysa picker birim listesiyle
+açılır; yalnızca dahili depolama varsa doğrudan onu açar. Dışa kapalı sağlayıcı kullanır, diğer uygulamalar
 tüm depolamayı göremez; sadece picker'ın verdiği izinle seçilen dosya/klasöre erişir.
 
 ## Kurulum (kullanıcı için)
@@ -72,7 +73,7 @@ kullanacağını soruyor. "Yalnızca bir defa" dersen bazı uygulamalar (örneğ
 
 ## Sınırlar
 
-- Yalnızca dahili depolama (`/sdcard`). SD kart ve USB desteklenmez.
+- SD kart ve USB bellek desteği yazıldı ama gerçek cihazda henüz test edilmedi. Geri bildirim memnuniyetle karşılanır.
 - Dosya yazma sadece `CREATE_DOCUMENT` ile yeni dosya oluşturmayla sınırlı.
 - Android 11+ paket görünürlüğü nedeniyle çağıran uygulamanın manifest'inde `<queries>` tanımı gerekebilir.
 
