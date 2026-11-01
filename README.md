@@ -106,4 +106,10 @@ other app mentioned here; all names belong to their owners.
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). The app has no dependencies, no internet permission, no ads and no tracking.
+
+## Author
+
+Made by [mcalago](https://github.com/mcalago) · [mesutcanalagoz.com.tr](https://mesutcanalagoz.com.tr)
+
+Issues and pull requests are welcome. The in-app **About** screen shows the same information.

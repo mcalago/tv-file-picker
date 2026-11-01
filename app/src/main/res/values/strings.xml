@@ -64,4 +64,17 @@
     <string name="dialog_open_setup">Open setup</string>
     <string name="dialog_no_result_title">Please choose “Always”</string>
     <string name="dialog_no_result_msg">The app that asked for a file can\'t receive your choice, because “Just once” was used. Go back, select “TV File Picker” when asked, and press “Always”.</string>
+
+    <string name="about_button">About</string>
+    <string name="about_title">About</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_description">A free, open-source file picker for Android and Google TV, made for the remote control. It lets apps such as PPSSPP and RetroArch choose folders and keep reading and writing there.</string>
+    <string name="about_privacy_title">Your privacy</string>
+    <string name="about_privacy_body">This app has no internet access, no ads, no tracking and collects no data. It only touches the folders you choose.</string>
+    <string name="about_license_title">License</string>
+    <string name="about_license_body">MIT License. You may use, copy, modify and share it freely. It uses no third-party libraries.</string>
+    <string name="about_links_title">Links</string>
+    <string name="about_website">Website: mesutcanalagoz.com.tr</string>
+    <string name="about_source">Source code: github.com/mcalago/tv-file-picker</string>
+    <string name="about_disclaimer">Not affiliated with Google, PPSSPP, RetroArch or any other app mentioned here. All names belong to their owners. This app contains no games or other copyrighted content.</string>
 </resources>

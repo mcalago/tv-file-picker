@@ -63,6 +63,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Material.NoActionBar" />
+
         <!--
           DocumentsProvider requirements (the standard setup from the Android SAF docs):
           - exported="true" is required

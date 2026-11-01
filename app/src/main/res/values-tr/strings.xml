@@ -64,4 +64,17 @@
     <string name="dialog_open_setup">Kurulumu aç</string>
     <string name="dialog_no_result_title">Lütfen “Her zaman”ı seç</string>
     <string name="dialog_no_result_msg">Dosya isteyen uygulama seçimini alamıyor, çünkü “Yalnızca bir defa” kullanılmış. Geri dön, sorulunca “TV Dosya Seçici”yi seç ve “Her zaman”a bas.</string>
+
+    <string name="about_button">Hakkında</string>
+    <string name="about_title">Hakkında</string>
+    <string name="about_version">Sürüm %1$s</string>
+    <string name="about_description">Android ve Google TV için, kumandayla kullanılacak şekilde yapılmış ücretsiz ve açık kaynaklı bir dosya seçici. PPSSPP ve RetroArch gibi uygulamaların klasör seçmesini ve orada okuyup yazmaya devam etmesini sağlar.</string>
+    <string name="about_privacy_title">Gizliliğin</string>
+    <string name="about_privacy_body">Bu uygulamanın internet erişimi, reklamı ve izleyicisi yoktur, hiçbir veri toplamaz. Yalnızca senin seçtiğin klasörlere dokunur.</string>
+    <string name="about_license_title">Lisans</string>
+    <string name="about_license_body">MIT Lisansı. Özgürce kullanabilir, kopyalayabilir, değiştirebilir ve paylaşabilirsin. Üçüncü taraf kütüphane kullanmaz.</string>
+    <string name="about_links_title">Bağlantılar</string>
+    <string name="about_website">Web sitesi: mesutcanalagoz.com.tr</string>
+    <string name="about_source">Kaynak kodu: github.com/mcalago/tv-file-picker</string>
+    <string name="about_disclaimer">Google, PPSSPP, RetroArch veya burada adı geçen başka bir uygulamayla bağlantısı yoktur. Tüm adlar sahiplerine aittir. Bu uygulama oyun veya telifli başka içerik barındırmaz.</string>
 </resources>

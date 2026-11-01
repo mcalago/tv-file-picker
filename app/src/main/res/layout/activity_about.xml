@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/about_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:paddingHorizontal="64dp"
+        android:paddingVertical="28dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/accent"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/about_version"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:textColor="@color/text_muted"
+            android:textSize="22sp" />
+
+        <TextView
+            style="@style/AboutBody"
+            android:text="@string/about_description" />
+
+        <TextView
+            style="@style/AboutHeading"
+            android:text="@string/about_privacy_title" />
+        <TextView
+            style="@style/AboutBody"
+            android:text="@string/about_privacy_body" />
+
+        <TextView
+            style="@style/AboutHeading"
+            android:text="@string/about_license_title" />
+        <TextView
+            style="@style/AboutBody"
+            android:text="@string/about_license_body" />
+
+        <TextView
+            style="@style/AboutHeading"
+            android:text="@string/about_links_title" />
+        <TextView
+            style="@style/AboutBody"
+            android:text="@string/about_website" />
+        <TextView
+            style="@style/AboutBody"
+            android:text="@string/about_source" />
+
+        <TextView
+            style="@style/AboutBody"
+            android:layout_marginTop="20dp"
+            android:text="@string/about_disclaimer"
+            android:textColor="@color/text_muted"
+            android:textSize="18sp" />
+    </LinearLayout>
+</ScrollView>

@@ -93,4 +93,10 @@ kullanacağını soruyor. "Yalnızca bir defa" dersen bazı uygulamalar (örneğ
 
 ## Lisans
 
-[MIT](LICENSE)
+[MIT](LICENSE). Uygulamanın bağımlılığı, internet izni, reklamı ve izleyicisi yoktur.
+
+## Yapımcı
+
+[mcalago](https://github.com/mcalago) · [mesutcanalagoz.com.tr](https://mesutcanalagoz.com.tr)
+
+Sorun bildirimleri ve katkılar memnuniyetle karşılanır. Uygulama içindeki **Hakkında** ekranı aynı bilgileri gösterir.

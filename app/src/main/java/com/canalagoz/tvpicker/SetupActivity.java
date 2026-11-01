@@ -50,6 +50,8 @@ public class SetupActivity extends Activity {
 
         step1Button.setOnClickListener(v -> requestFileAccess());
         step2Button.setOnClickListener(v -> tryPicker());
+        findViewById(R.id.about_button).setOnClickListener(
+                v -> startActivity(new Intent(this, AboutActivity.class)));
     }
 
     @Override
