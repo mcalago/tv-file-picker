@@ -7,7 +7,7 @@ that help people work on this repository (Claude Code and friends read `AGENTS.m
 
 A remote-friendly file picker and `DocumentsProvider` for Android / Google TV devices that ship without the system file picker.
 Apps such as PPSSPP and RetroArch use it to choose folders and keep reading and writing there.
-Java, no third-party libraries, `minSdk 28`, `targetSdk 34`.
+Java, no third-party libraries, `minSdk 28`, `targetSdk 36`.
 
 ## Promises to keep
 
