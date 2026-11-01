@@ -9,3 +9,25 @@ local.properties
 *.jks
 *.keystore
 .DS_Store
+
+# Signing keys, credentials and release material (never public)
+*.jks
+*.keystore
+*.pem
+*.p12
+*.pfx
+keystore.properties
+env.sh
+.env
+.env.*
+service-account*.json
+*-credentials.json
+google-services.json
+
+# Store / Play Console material and built packages kept outside the public repo
+private/
+play/
+play-console/
+store/
+*.aab
+*.apk
