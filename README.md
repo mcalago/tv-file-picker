@@ -101,6 +101,8 @@ other app mentioned here; all names belong to their owners.
 
 [MIT](LICENSE). The app has no dependencies, no internet permission, no ads and no tracking.
 
+The name "TV File Picker", its icon and banner are not covered by the license. The official builds are the ones on Google Play and in this repository's releases; if you publish a fork, please give it your own name, icon and package name.
+
 ## Author
 
 Made by [mcalago](https://github.com/mcalago) · [mesutcanalagoz.com.tr](https://mesutcanalagoz.com.tr)

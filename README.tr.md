@@ -88,6 +88,8 @@ kullanacağını soruyor. "Yalnızca bir defa" dersen bazı uygulamalar (örneğ
 
 [MIT](LICENSE). Uygulamanın bağımlılığı, internet izni, reklamı ve izleyicisi yoktur.
 
+"TV Dosya Seçici" adı, simgesi ve banner'ı lisansa dahil değildir. Resmi sürümler Google Play'deki ve bu deponun sürümler sayfasındakilerdir; bir çatal yayınlarsan lütfen kendi adını, simgeni ve paket adını kullan.
+
 ## Yapımcı
 
 [mcalago](https://github.com/mcalago) · [mesutcanalagoz.com.tr](https://mesutcanalagoz.com.tr)
