@@ -61,18 +61,11 @@ Requirements: JDK 17, Android SDK (platform 34, build-tools 34.0.0), Gradle.
 
 The script builds, installs, grants the permission and checks that the picker is visible to the system.
 
-### Signed release APK
+### Release builds
 
-```
-keytool -genkeypair -v -keystore tvpicker.jks -alias tvpicker -keyalg RSA -keysize 2048 -validity 10000
-export TVPICKER_KEYSTORE=$PWD/tvpicker.jks
-export TVPICKER_STORE_PASS=...
-export TVPICKER_KEY_ALIAS=tvpicker
-export TVPICKER_KEY_PASS=...
-./gradlew assembleRelease
-```
-
-Never commit `tvpicker.jks` or the passwords.
+Official releases are signed by the maintainer, so the Releases page is the only place to get an APK that updates cleanly.
+For your own build, run `./gradlew assembleDebug` (debug-signed), or sign a release build with a keystore of your own
+(see the comments in `app/build.gradle`). Keystores and passwords are never part of this repository.
 
 ## Compatibility
 

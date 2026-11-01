@@ -54,18 +54,11 @@ Gereksinimler: JDK 17, Android SDK (platform 34, build-tools 34.0.0), Gradle.
 
 Script derler, yükler, izni verir ve picker'ın sistemde görünüp görünmediğini kontrol eder.
 
-### İmzalı release APK
+### Release sürümleri
 
-```
-keytool -genkeypair -v -keystore tvpicker.jks -alias tvpicker -keyalg RSA -keysize 2048 -validity 10000
-export TVPICKER_KEYSTORE=$PWD/tvpicker.jks
-export TVPICKER_STORE_PASS=...
-export TVPICKER_KEY_ALIAS=tvpicker
-export TVPICKER_KEY_PASS=...
-./gradlew assembleRelease
-```
-
-`tvpicker.jks` dosyasını ve şifreleri repoya koyma.
+Resmi sürümler yapımcı tarafından imzalanır; sorunsuz güncellenen APK'yı almanın tek yeri Releases sayfasıdır.
+Kendi sürümünü derlemek için `./gradlew assembleDebug` (debug imzalı) çalıştır veya kendi anahtarınla bir release sürümü imzala
+(bkz. `app/build.gradle` içindeki yorumlar). Anahtarlar ve şifreler bu deponun parçası değildir.
 
 ## Uyumluluk
 
