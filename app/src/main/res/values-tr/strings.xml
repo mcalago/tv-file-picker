@@ -8,7 +8,7 @@
     <string name="btn_new_folder">+ Yeni klasör</string>
     <string name="btn_select_folder">Bu klasörü seç</string>
     <string name="btn_save_here">Buraya kaydet: %1$s</string>
-    <string name="btn_confirm_selection">Seçilenleri onayla (%1$d)</string>
+    <string name="btn_confirm_selection">Onayla (%1$d)</string>
     <string name="default_file_name">yeni_dosya</string>
 
     <string name="hint_pick_folder">Klasöre girip sağdaki düğmeyle seç.\nGeri: üst klasör</string>
@@ -51,7 +51,7 @@
     <string name="setup_step1_button">İzin ver</string>
     <string name="setup_find_in_list">Listede “TV Dosya Seçici”yi bul ve aç, sonra Geri tuşuna bas.</string>
     <string name="setup_step2_title">Sorulunca bu uygulamayı seç</string>
-    <string name="setup_step2_desc">Android hangi uygulamayı kullanacağını sorduğunda “TV Dosya Seçici”yi seç ve “Her zaman”a bas.</string>
+    <string name="setup_step2_desc">Android hangi uygulamayı kullanacağını sorduğunda “TV Dosya Seçici”yi seç ve “Her zaman”a bas. Android her istek türü için bir kez daha sorabilir, her seferinde “Her zaman”ı seç.</string>
     <string name="setup_step2_button">Şimdi dene</string>
     <string name="setup_done_title">Hazır!</string>
     <string name="setup_done_desc">Oyun uygulamanı açıp klasörünü seç. Bu uygulama gerektiğinde kendiliğinden açılır.</string>
@@ -66,7 +66,6 @@
     <string name="dialog_no_result_msg">Dosya isteyen uygulama seçimini alamıyor, çünkü “Yalnızca bir defa” kullanılmış. Geri dön, sorulunca “TV Dosya Seçici”yi seç ve “Her zaman”a bas.</string>
 
     <string name="about_button">Hakkında</string>
-    <string name="about_title">Hakkında</string>
     <string name="about_version">Sürüm %1$s</string>
     <string name="about_description">Android ve Google TV için, kumandayla kullanılacak şekilde yapılmış ücretsiz ve açık kaynaklı bir dosya seçici. PPSSPP ve RetroArch gibi uygulamaların klasör seçmesini ve orada okuyup yazmaya devam etmesini sağlar.</string>
     <string name="about_privacy_title">Gizliliğin</string>

@@ -44,7 +44,7 @@ cannot browse your storage; they only reach what the picker explicitly grants th
 3. Open **TV File Picker** from the apps row. A two-step guide appears and shows a green check when each step is done:
    1. **Allow access to files.** Press the button, find "TV File Picker" in the list that opens, switch it on and press Back.
    2. **Choose this app when asked.** Press "Try it now". When Android asks which app to use, select
-      "TV File Picker" and press **Always**.
+      "TV File Picker" and press **Always**. Android may ask again for each kind of request (opening a file, saving a file); choose **Always** every time.
 4. That's it. When a game app asks you to pick a file or folder, this picker opens by itself.
 
 No computer or command line is needed after the install. If your TV has no "all files access" screen,

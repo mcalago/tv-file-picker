@@ -37,7 +37,7 @@ tüm depolamayı göremez; sadece picker'ın verdiği izinle seçilen dosya/klas
 3. Uygulamalar satırından **TV Dosya Seçici**'yi aç. İki adımlı bir rehber çıkar, her adım bitince yeşil tik görünür:
    1. **Dosyalara erişime izin ver.** Düğmeye bas, açılan listede "TV Dosya Seçici"yi bul, aç ve Geri'ye bas.
    2. **Sorulunca bu uygulamayı seç.** "Şimdi dene"ye bas. Android hangi uygulamayı kullanacağını sorunca
-      "TV Dosya Seçici"yi seç ve **Her zaman**'a bas.
+      "TV Dosya Seçici"yi seç ve **Her zaman**'a bas. Android her istek türü için (dosya açma, dosya kaydetme) bir kez daha sorabilir; her seferinde **Her zaman**'ı seç.
 4. Hepsi bu. Bir oyun uygulaması dosya veya klasör seçtirmek istediğinde bu picker kendiliğinden açılır.
 
 Kurulumdan sonra bilgisayara veya komut satırına gerek yok. TV'nde "tüm dosyalara erişim" ekranı yoksa uygulama

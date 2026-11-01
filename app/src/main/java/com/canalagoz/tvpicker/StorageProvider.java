@@ -472,7 +472,7 @@ public class StorageProvider extends DocumentsProvider {
         if (dot < 0) {
             return "application/octet-stream";
         }
-        String ext = name.substring(dot + 1).toLowerCase();
+        String ext = name.substring(dot + 1).toLowerCase(java.util.Locale.ROOT);
         String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
         return mime != null ? mime : "application/octet-stream";
     }
