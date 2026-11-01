@@ -22,13 +22,19 @@ tüm depolamayı göremez; sadece picker'ın verdiği izinle seçilen dosya/klas
 
 1. Releases sayfasından `tv-file-picker-x.y.apk` dosyasını indir.
 2. TV'ye kur. İki yol var:
-   - **Bilgisayardan (önerilen):** TV'de geliştirici seçeneklerinde ADB açıksa
+   - **TV üzerinden:** "bilinmeyen kaynaklardan kurulum" izni olan bir dosya yöneticisi veya APK kurucu
+     uygulaması (örneğin Downloader) kullan.
+   - **Bilgisayardan:** TV'de geliştirici seçeneklerinde ADB açıksa
      `adb connect <TV_IP>` ve ardından `adb install -r tv-file-picker-x.y.apk`.
-   - **TV üzerinden:** Cihazında "bilinmeyen kaynaklardan kurulum" izni olan bir dosya yöneticisi
-     veya APK kurucu uygulaması kullan.
-3. İlk açılışta uygulama açılmaz, bu normal. Başka bir uygulama dosya seçtirdiğinde otomatik devreye girer.
-4. Tüm dosyalara erişim izni gerekiyorsa (Android 11+):
-   `adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
+3. Uygulamalar satırından **TV Dosya Seçici**'yi aç. İki adımlı bir rehber çıkar, her adım bitince yeşil tik görünür:
+   1. **Dosyalara erişime izin ver.** Düğmeye bas, açılan listede "TV Dosya Seçici"yi bul, aç ve Geri'ye bas.
+   2. **Sorulunca bu uygulamayı seç.** "Şimdi dene"ye bas. Android hangi uygulamayı kullanacağını sorunca
+      "TV Dosya Seçici"yi seç ve **Her zaman**'a bas.
+4. Hepsi bu. Bir oyun uygulaması dosya veya klasör seçtirmek istediğinde bu picker kendiliğinden açılır.
+
+Kurulumdan sonra bilgisayara veya komut satırına gerek yok. TV'nde "tüm dosyalara erişim" ekranı yoksa uygulama
+bunu söyler; izin bir kez bilgisayardan verilebilir:
+`adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
 
 ## Geliştirici kurulumu
 

@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="bg">#FF0E1116</color>
-    <color name="surface">#FF171D26</color>
+    <color name="surface">#FF1A222D</color>
     <color name="row_focus">#FF22344A</color>
     <color name="accent">#FF4FC3F7</color>
-    <color name="text_primary">#FFECEFF4</color>
-    <color name="text_muted">#FF8A98A5</color>
+    <color name="success">#FF66BB6A</color>
+    <color name="warning">#FFFFB74D</color>
+    <color name="text_primary">#FFF4F7FA</color>
+    <color name="text_muted">#FFB8C4D0</color>
+    <color name="badge_file">#FF90A4B4</color>
     <color name="divider">#FF243039</color>
 </resources>

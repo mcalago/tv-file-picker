@@ -1,6 +1,7 @@
 package com.canalagoz.tvpicker;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Intent;
 import android.database.Cursor;
@@ -28,7 +29,7 @@ import java.util.Set;
 /**
  * File picker that stands in for the system SAF picker on Android TVs that lack one.
  *
- * Desteklenen intent'ler:
+ * Supported intents:
  *  - ACTION_OPEN_DOCUMENT / ACTION_GET_CONTENT : pick files (EXTRA_ALLOW_MULTIPLE, EXTRA_MIME_TYPES)
  *  - ACTION_OPEN_DOCUMENT_TREE                 : pick a folder (tree URI with persistable permission)
  *  - ACTION_CREATE_DOCUMENT                    : pick a folder and create a new file named EXTRA_TITLE
@@ -131,7 +132,32 @@ public class PickerActivity extends Activity {
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this::onEntryClicked);
 
+        if (!SetupActivity.hasFileAccess(this)) {
+            showNoAccessDialog();
+        } else if (getCallingPackage() == null) {
+            // Started without a result channel (the "Just once" chooser case): our answer would get lost.
+            showNoResultDialog();
+        }
+
         load(ROOT);
+    }
+
+    private void showNoAccessDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_no_access_title)
+                .setMessage(R.string.dialog_no_access_msg)
+                .setPositiveButton(R.string.dialog_open_setup,
+                        (d, w) -> startActivity(new Intent(this, SetupActivity.class)))
+                .setNegativeButton(R.string.dialog_cancel, null)
+                .show();
+    }
+
+    private void showNoResultDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_no_result_title)
+                .setMessage(R.string.dialog_no_result_msg)
+                .setPositiveButton(R.string.dialog_ok, null)
+                .show();
     }
 
     private void setupActionButton() {
@@ -305,6 +331,12 @@ public class PickerActivity extends Activity {
             TextView meta = row.findViewById(R.id.meta);
 
             name.setText(e.name);
+
+            int badgeColor = e.dir ? R.color.accent : R.color.badge_file;
+            if (!e.dir && allowMultiple && selected.contains(e.docId)) {
+                badgeColor = R.color.success;
+            }
+            badge.setBackgroundColor(getColor(badgeColor));
 
             if (e.dir) {
                 badge.setText(R.string.badge_folder);

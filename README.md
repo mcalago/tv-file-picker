@@ -27,12 +27,19 @@ cannot browse your storage; they only reach what the picker explicitly grants th
 
 1. Download `tv-file-picker-x.y.apk` from the Releases page.
 2. Install it on the TV. Two options:
-   - **From a computer (recommended):** with ADB enabled in the TV's developer options, run
+   - **On the TV:** use a file manager or APK installer app (for example Downloader) that has the
+     "install unknown apps" permission.
+   - **From a computer:** with ADB enabled in the TV's developer options, run
      `adb connect <TV_IP>` and then `adb install -r tv-file-picker-x.y.apk`.
-   - **On the TV:** use a file manager or APK installer that has the "install unknown apps" permission.
-3. The app does not open on its own, which is normal. It takes over automatically when another app asks for a file.
-4. Grant all-files access if needed (Android 11+):
-   `adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
+3. Open **TV File Picker** from the apps row. A two-step guide appears and shows a green check when each step is done:
+   1. **Allow access to files.** Press the button, find "TV File Picker" in the list that opens, switch it on and press Back.
+   2. **Choose this app when asked.** Press "Try it now". When Android asks which app to use, select
+      "TV File Picker" and press **Always**.
+4. That's it. When a game app asks you to pick a file or folder, this picker opens by itself.
+
+No computer or command line is needed after the install. If your TV has no "all files access" screen,
+the app tells you, and the permission can be given once from a computer:
+`adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
 
 ## Build (for developers)
 

@@ -44,4 +44,24 @@
     <string name="dialog_new_folder">New folder</string>
     <string name="dialog_create">Create</string>
     <string name="dialog_cancel">Cancel</string>
+
+    <string name="setup_intro">Lets apps like PPSSPP and RetroArch use the files on this TV. Just two quick steps:</string>
+    <string name="setup_step1_title">Allow access to files</string>
+    <string name="setup_step1_desc">Needed so apps can read your games and save your progress.</string>
+    <string name="setup_step1_button">Allow access</string>
+    <string name="setup_find_in_list">Find “TV File Picker” in the list and switch it on, then press Back.</string>
+    <string name="setup_step2_title">Choose this app when asked</string>
+    <string name="setup_step2_desc">When Android asks which app to use, pick “TV File Picker” and press “Always”.</string>
+    <string name="setup_step2_button">Try it now</string>
+    <string name="setup_done_title">All set!</string>
+    <string name="setup_done_desc">Open your game app and choose your folder. This app opens by itself when needed.</string>
+    <string name="setup_access_unavailable_title">Access can\'t be given here</string>
+    <string name="setup_access_unavailable_msg">This TV has no screen for the file access setting. It can be turned on once from a computer. The steps are on the project page: github.com/mcalago/tv-file-picker</string>
+
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_no_access_title">Allow access first</string>
+    <string name="dialog_no_access_msg">TV File Picker needs permission to see your files. Open the setup screen to allow it.</string>
+    <string name="dialog_open_setup">Open setup</string>
+    <string name="dialog_no_result_title">Please choose “Always”</string>
+    <string name="dialog_no_result_msg">The app that asked for a file can\'t receive your choice, because “Just once” was used. Go back, select “TV File Picker” when asked, and press “Always”.</string>
 </resources>

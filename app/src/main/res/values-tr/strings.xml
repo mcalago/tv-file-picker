@@ -44,4 +44,24 @@
     <string name="dialog_new_folder">Yeni klasör</string>
     <string name="dialog_create">Oluştur</string>
     <string name="dialog_cancel">İptal</string>
+
+    <string name="setup_intro">PPSSPP ve RetroArch gibi uygulamaların bu TV\'deki dosyaları kullanmasını sağlar. Sadece iki kısa adım:</string>
+    <string name="setup_step1_title">Dosyalara erişime izin ver</string>
+    <string name="setup_step1_desc">Uygulamaların oyunlarını okuyabilmesi ve ilerlemeni kaydedebilmesi için gerekli.</string>
+    <string name="setup_step1_button">İzin ver</string>
+    <string name="setup_find_in_list">Listede “TV Dosya Seçici”yi bul ve aç, sonra Geri tuşuna bas.</string>
+    <string name="setup_step2_title">Sorulunca bu uygulamayı seç</string>
+    <string name="setup_step2_desc">Android hangi uygulamayı kullanacağını sorduğunda “TV Dosya Seçici”yi seç ve “Her zaman”a bas.</string>
+    <string name="setup_step2_button">Şimdi dene</string>
+    <string name="setup_done_title">Hazır!</string>
+    <string name="setup_done_desc">Oyun uygulamanı açıp klasörünü seç. Bu uygulama gerektiğinde kendiliğinden açılır.</string>
+    <string name="setup_access_unavailable_title">İzin buradan verilemiyor</string>
+    <string name="setup_access_unavailable_msg">Bu TV\'de dosya erişimi ayarı için bir ekran yok. Bir kez bilgisayardan açılabilir. Adımlar proje sayfasında: github.com/mcalago/tv-file-picker</string>
+
+    <string name="dialog_ok">Tamam</string>
+    <string name="dialog_no_access_title">Önce izin ver</string>
+    <string name="dialog_no_access_msg">TV Dosya Seçici\'nin dosyalarını görebilmesi için izin gerekiyor. İzin vermek için kurulum ekranını aç.</string>
+    <string name="dialog_open_setup">Kurulumu aç</string>
+    <string name="dialog_no_result_title">Lütfen “Her zaman”ı seç</string>
+    <string name="dialog_no_result_msg">Dosya isteyen uygulama seçimini alamıyor, çünkü “Yalnızca bir defa” kullanılmış. Geri dön, sorulunca “TV Dosya Seçici”yi seç ve “Her zaman”a bas.</string>
 </resources>
