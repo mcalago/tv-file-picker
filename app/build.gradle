@@ -1,0 +1,44 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.canalagoz.tvpicker'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.canalagoz.tvpicker"
+        minSdk 28
+        targetSdk 34
+        versionCode 1
+        versionName "0.1"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    // Release imzası ortam değişkenlerinden okunur (anahtar dosyası projede tutulmaz):
+    //   TVPICKER_KEYSTORE, TVPICKER_STORE_PASS, TVPICKER_KEY_ALIAS, TVPICKER_KEY_PASS
+    // Bunlar yoksa release APK imzasız çıkar; debug APK her zaman imzalıdır.
+    signingConfigs {
+        release {
+            if (System.getenv("TVPICKER_KEYSTORE")) {
+                storeFile file(System.getenv("TVPICKER_KEYSTORE"))
+                storePassword System.getenv("TVPICKER_STORE_PASS")
+                keyAlias System.getenv("TVPICKER_KEY_ALIAS")
+                keyPassword System.getenv("TVPICKER_KEY_PASS")
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            if (System.getenv("TVPICKER_KEYSTORE")) {
+                signingConfig signingConfigs.release
+            }
+        }
+    }
+}

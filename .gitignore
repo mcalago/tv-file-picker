@@ -1,0 +1,11 @@
+# Derleme çıktıları
+build/
+app/build/
+.gradle/
+.idea/
+
+# Makineye özel / gizli dosyalar
+local.properties
+*.jks
+*.keystore
+.DS_Store

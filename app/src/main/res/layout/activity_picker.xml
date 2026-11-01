@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/bg"
+    android:paddingHorizontal="48dp"
+    android:paddingVertical="32dp">
+
+    <!-- Sol: başlık, yol, sayaç ve liste -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/accent"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_primary"
+            android:textSize="22sp"
+            android:singleLine="true"
+            android:ellipsize="start" />
+
+        <TextView
+            android:id="@+id/count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_muted"
+            android:textSize="15sp"
+            android:paddingBottom="12dp" />
+
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:focusable="true"
+            android:fastScrollEnabled="true"
+            android:listSelector="@drawable/bg_row"
+            android:divider="@null"
+            android:dividerHeight="0dp" />
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/picker_empty"
+            android:textColor="@color/text_muted"
+            android:textSize="18sp"
+            android:visibility="gone"
+            android:paddingTop="24dp" />
+    </LinearLayout>
+
+    <!-- Sağ: düğmeler her zaman görünür -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="40dp">
+
+        <Button
+            android:id="@+id/up_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_button"
+            android:text="Üst klasör"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/new_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_button"
+            android:text="+ Yeni klasör"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/select_folder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_button"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp"
+            android:visibility="gone" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_muted"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>
