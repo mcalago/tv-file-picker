@@ -19,9 +19,9 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    // Release imzası ortam değişkenlerinden okunur (anahtar dosyası projede tutulmaz):
+    // The release signing config is read from environment variables (the key file is not kept in the project):
     //   TVPICKER_KEYSTORE, TVPICKER_STORE_PASS, TVPICKER_KEY_ALIAS, TVPICKER_KEY_PASS
-    // Bunlar yoksa release APK imzasız çıkar; debug APK her zaman imzalıdır.
+    // Without them the release APK is unsigned; the debug APK is always signed.
     signingConfigs {
         release {
             if (System.getenv("TVPICKER_KEYSTORE")) {

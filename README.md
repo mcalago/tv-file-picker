@@ -1,43 +1,49 @@
-# TV Dosya Seçici
+# TV File Picker
 
-Sistem dosya seçicisi (DocumentsUI) olmayan Android TV cihazlar için kumandayla kullanılabilen bir dosya seçici.
-Uygulamalar `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`, `ACTION_OPEN_DOCUMENT_TREE` ve `ACTION_CREATE_DOCUMENT`
-gönderdiğinde bu uygulama cevap verir.
+[Türkçe](README.tr.md) | **English**
 
-## Ne yapar
+A remote-friendly file picker and storage provider for Android / Google TV devices that ship without the
+system file picker (DocumentsUI). When an app fires `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`,
+`ACTION_OPEN_DOCUMENT_TREE` or `ACTION_CREATE_DOCUMENT`, this app answers.
 
-| Intent | Ne olur |
+The UI follows the device language: English by default, Turkish included. More translations are welcome.
+
+## What it does
+
+| Intent | Result |
 |---|---|
-| `OPEN_DOCUMENT` / `GET_CONTENT` | Dosya seçtirir. `EXTRA_ALLOW_MULTIPLE` ve `EXTRA_MIME_TYPES` desteklenir. |
-| `OPEN_DOCUMENT_TREE` | Klasör seçtirir, kalıcı okuma/yazma izni verir (Lemuroid gibi uygulamalar için). |
-| `CREATE_DOCUMENT` | Klasör seçtirir ve `EXTRA_TITLE` adıyla yeni dosya oluşturur. |
+| `OPEN_DOCUMENT` / `GET_CONTENT` | Lets the user pick files. `EXTRA_ALLOW_MULTIPLE` and `EXTRA_MIME_TYPES` are supported. |
+| `OPEN_DOCUMENT_TREE` | Lets the user pick a folder and grants persistent read/write access (for apps such as Lemuroid and PPSSPP). |
+| `CREATE_DOCUMENT` | Lets the user pick a folder and creates a new file named `EXTRA_TITLE`. |
 
-Yalnızca `/sdcard` (dahili depolama) altını gösterir. Dışa kapalı sağlayıcı kullanır, diğer uygulamalar
-tüm depolamayı göremez; sadece picker'ın verdiği izinle seçilen dosya/klasöre erişir.
+It also ships a full `DocumentsProvider` (create, rename, delete, move, copy), so apps can keep reading and
+writing inside the folder you picked, for example config files, save data and save states.
 
-## Kurulum (kullanıcı için)
+Only internal storage (`/sdcard`) is shown. The provider is protected by `MANAGE_DOCUMENTS`, so other apps
+cannot browse your storage; they only reach what the picker explicitly grants them.
 
-1. Releases sayfasından `tv-dosya-secici-x.y.apk` dosyasını indir.
-2. TV'ye kur. İki yol var:
-   - **Bilgisayardan (önerilen):** TV'de geliştirici seçeneklerinde ADB açıksa
-     `adb connect <TV_IP>` ve ardından `adb install -r tv-dosya-secici-x.y.apk`.
-   - **TV üzerinden:** Cihazında "bilinmeyen kaynaklardan kurulum" izni olan bir dosya yöneticisi
-     veya APK kurucu uygulaması kullan.
-3. İlk açılışta uygulama açılmaz, bu normal. Başka bir uygulama dosya seçtirdiğinde otomatik devreye girer.
-4. Tüm dosyalara erişim izni gerekiyorsa (Android 11+):
+## Install (for users)
+
+1. Download `tv-file-picker-x.y.apk` from the Releases page.
+2. Install it on the TV. Two options:
+   - **From a computer (recommended):** with ADB enabled in the TV's developer options, run
+     `adb connect <TV_IP>` and then `adb install -r tv-file-picker-x.y.apk`.
+   - **On the TV:** use a file manager or APK installer that has the "install unknown apps" permission.
+3. The app does not open on its own, which is normal. It takes over automatically when another app asks for a file.
+4. Grant all-files access if needed (Android 11+):
    `adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
 
-## Geliştirici kurulumu
+## Build (for developers)
 
-Gereksinimler: JDK 17, Android SDK (platform 34, build-tools 34.0.0), Gradle.
+Requirements: JDK 17, Android SDK (platform 34, build-tools 34.0.0), Gradle.
 
 ```
 ./deploy.sh <TV_IP>:5555
 ```
 
-Script derler, yükler, izni verir ve picker'ın sistemde görünüp görünmediğini kontrol eder.
+The script builds, installs, grants the permission and checks that the picker is visible to the system.
 
-### İmzalı release APK
+### Signed release APK
 
 ```
 keytool -genkeypair -v -keystore tvpicker.jks -alias tvpicker -keyalg RSA -keysize 2048 -validity 10000
@@ -48,25 +54,30 @@ export TVPICKER_KEY_PASS=...
 ./gradlew assembleRelease
 ```
 
-`tvpicker.jks` dosyasını ve şifreleri repoya koyma.
+Never commit `tvpicker.jks` or the passwords.
 
-## Uyumluluk
+## Compatibility
 
-| Uygulama | Durum |
+| App | Status |
 |---|---|
-| Lemuroid | Klasör seçimi ve oyun açma doğrulandı (ROM okuma) |
-| PPSSPP | Test edilecek (tek dosya) |
-| RetroArch | Kendi dosya tarayıcısını kullanır, bu picker'a gerek yok |
-| Kaydetme (`CREATE_DOCUMENT`) | Kodda var, test edilecek |
+| PPSSPP | Verified: folder selection, settings, in-game saves, save state save/load |
+| Lemuroid | Verified: folder selection and opening games (ROM reading) |
+| RetroArch | Uses its own file browser, so it does not need this picker |
+| Saving (`CREATE_DOCUMENT`) | Implemented, not yet tested |
 
-Yeni bir uygulamayla denediysen sonucu bir issue aç: uygulama adı, sürüm, intent ve logcat çıktısıyla.
+If you try another app, please open an issue with the app name, version, intent and logcat output.
 
-## Sınırlar
+## Limitations
 
-- Yalnızca dahili depolama (`/sdcard`). SD kart ve USB desteklenmez.
-- Dosya yazma sadece `CREATE_DOCUMENT` ile yeni dosya oluşturmayla sınırlı.
-- Android 11+ paket görünürlüğü nedeniyle çağıran uygulamanın manifest'inde `<queries>` tanımı gerekebilir.
+- Internal storage only (`/sdcard`). SD cards and USB drives are not supported.
+- Because of Android 11+ package visibility, the calling app may need a `<queries>` entry in its manifest.
 
-## Lisans
+## Legal
 
-Lisans dosyası eklenecek.
+This project only provides file access. It contains and distributes no games, ROMs or other copyrighted
+content. Use it with files you are legally allowed to use. It is not affiliated with Google, PPSSPP or any
+other app mentioned here; all names belong to their owners.
+
+## License
+
+[MIT](LICENSE)

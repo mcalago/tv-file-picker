@@ -18,11 +18,11 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 
 /**
- * Sistem DocumentsUI olmayan cihazlar için kendi SAF sağlayıcımız.
+ * Our own SAF provider for devices that ship without the system DocumentsUI.
  *
- * Belge kimlikleri "primary:" öneki + depolama köküne göre göreli yol biçimindedir
- * (örn. "primary:Download/psp"). ExternalStorageProvider ile aynı biçim. PPSSPP gibi
- * uygulamalar kimlikleri yol gibi birleştirdiği için mutlak yol kullanmak onları bozuyordu.
+ * Document IDs are the "primary:" prefix plus a path relative to the storage root
+ * (e.g. "primary:Download/psp"), the same format ExternalStorageProvider uses. Apps such as
+ * PPSSPP join IDs like paths, so absolute paths used to break them.
  */
 public class StorageProvider extends DocumentsProvider {
 
@@ -53,8 +53,8 @@ public class StorageProvider extends DocumentsProvider {
     }
 
     /**
-     * Bazı uygulamalar (örn. Lemuroid "gözat") kimliği üst + alt olarak iki kez birleştiriyor:
-     * "primary:A/primary:A/x" -> "primary:A/x". Son "primary:" öneki gerçek kimliktir.
+     * Some apps (e.g. Lemuroid "browse") join the ID twice, as parent + child:
+     * "primary:A/primary:A/x" -> "primary:A/x". The last "primary:" prefix starts the real ID.
      */
     private static String normalize(String id) {
         if (id == null) {
@@ -64,7 +64,7 @@ public class StorageProvider extends DocumentsProvider {
         return last > 0 ? id.substring(last) : id;
     }
 
-    /** İstemci projection verdiyse sütun sırası ona göre olmalı (PPSSPP indeksle okuyor). */
+    /** Column order must follow the client's projection (PPSSPP reads columns by index). */
     private static String[] columns(String[] projection) {
         return projection != null ? projection : DOC_COLUMNS;
     }
@@ -73,14 +73,14 @@ public class StorageProvider extends DocumentsProvider {
         return Environment.getExternalStorageDirectory();
     }
 
-    /** Depolama kökü silinemez, taşınamaz, yeniden adlandırılamaz. */
+    /** The storage root can't be deleted, moved or renamed. */
     private static void rejectRoot(String documentId) throws FileNotFoundException {
         if (PREFIX.equals(documentId)) {
-            throw new FileNotFoundException("Kök değiştirilemez");
+            throw new FileNotFoundException("The root cannot be modified");
         }
     }
 
-    /** Üst kimlik + ad = alt kimlik. Kök ("primary:") için ayraç eklenmez. */
+    /** Parent ID + name = child ID. No separator is added for the root ("primary:"). */
     private static String childId(String parentId, String name) {
         if (parentId.endsWith(":") || parentId.endsWith("/")) {
             return parentId + name;
@@ -88,10 +88,10 @@ public class StorageProvider extends DocumentsProvider {
         return parentId + "/" + name;
     }
 
-    /** Kimliği dosyaya çevirir. Kökün dışına çıkmayı engeller. */
+    /** Maps an ID to a file and refuses to leave the storage root. */
     private File resolve(String documentId) throws FileNotFoundException {
         if (documentId == null || !documentId.startsWith(PREFIX)) {
-            throw new FileNotFoundException("Geçersiz belge: " + documentId);
+            throw new FileNotFoundException("Invalid document: " + documentId);
         }
         String rel = documentId.substring(PREFIX.length());
         File base = baseDir();
@@ -100,13 +100,13 @@ public class StorageProvider extends DocumentsProvider {
             String basePath = base.getCanonicalPath();
             String canon = file.getCanonicalPath();
             if (!canon.equals(basePath) && !canon.startsWith(basePath + File.separator)) {
-                throw new FileNotFoundException("Kök dışında: " + documentId);
+                throw new FileNotFoundException("Outside the root: " + documentId);
             }
         } catch (IOException e) {
             throw new FileNotFoundException(e.getMessage());
         }
         if (!file.exists()) {
-            throw new FileNotFoundException("Bulunamadı: " + documentId);
+            throw new FileNotFoundException("Not found: " + documentId);
         }
         return file;
     }
@@ -142,7 +142,7 @@ public class StorageProvider extends DocumentsProvider {
             return cursor;
         }
 
-        // Önce klasörler, sonra dosyalar; her grup kendi içinde alfabetik.
+        // Folders first, then files; each group sorted alphabetically.
         Arrays.sort(children, (a, b) -> {
             if (a.isDirectory() != b.isDirectory()) {
                 return a.isDirectory() ? -1 : 1;
@@ -174,19 +174,19 @@ public class StorageProvider extends DocumentsProvider {
         parentDocumentId = normalize(parentDocumentId);
         File parent = resolve(parentDocumentId);
         if (!parent.isDirectory()) {
-            throw new FileNotFoundException("Klasör değil: " + parentDocumentId);
+            throw new FileNotFoundException("Not a directory: " + parentDocumentId);
         }
 
         String safe = displayName == null ? "" : displayName.replace('/', '_').replace('\0', '_').trim();
         if (safe.isEmpty() || safe.equals(".") || safe.equals("..")) {
-            safe = "yeni_dosya";
+            safe = "new_file";
         }
 
         boolean dir = Document.MIME_TYPE_DIR.equals(mimeType);
         String id = childId(parentDocumentId, safe);
         File target = new File(parent, safe);
 
-        // Zaten varsa aynısını döndür (uygulamalar önce bulamayıp sonra oluşturmayı dener).
+        // Return the existing document if there is one (apps often fail to find a file, then create it).
         if (target.exists()) {
             android.util.Log.d(TAG, "createDocument reuse " + target + " dir=" + dir);
             return id;
@@ -201,7 +201,7 @@ public class StorageProvider extends DocumentsProvider {
         }
         android.util.Log.d(TAG, "createDocument " + target + " dir=" + dir + " ok=" + ok);
         if (!ok) {
-            throw new FileNotFoundException("Oluşturulamadı: " + target);
+            throw new FileNotFoundException("Could not create: " + target);
         }
         return id;
     }
@@ -213,16 +213,16 @@ public class StorageProvider extends DocumentsProvider {
         File src = resolve(documentId);
         String safe = displayName == null ? "" : displayName.replace('/', '_').replace('\0', '_').trim();
         if (safe.isEmpty() || safe.equals(".") || safe.equals("..")) {
-            throw new FileNotFoundException("Geçersiz ad: " + displayName);
+            throw new FileNotFoundException("Invalid name: " + displayName);
         }
         File dst = new File(src.getParentFile(), safe);
         if (!dst.equals(src)) {
-            // PPSSPP kayıt durumunu .tmp olarak yazıp üzerine yeniden adlandırıyor; hedef varsa ezilir.
+            // PPSSPP writes save states as .tmp and renames over the final file, so overwrite the target.
             if (dst.exists()) {
                 deleteRecursive(dst);
             }
             if (!src.renameTo(dst)) {
-                throw new FileNotFoundException("Yeniden adlandırılamadı: " + src);
+                throw new FileNotFoundException("Could not rename: " + src);
             }
         }
         android.util.Log.d(TAG, "renameDocument " + src + " -> " + dst);
@@ -248,7 +248,7 @@ public class StorageProvider extends DocumentsProvider {
         File src = resolve(sourceDocumentId);
         File dstParent = resolve(targetParentDocumentId);
         if (!dstParent.isDirectory()) {
-            throw new FileNotFoundException("Hedef klasör değil");
+            throw new FileNotFoundException("Target is not a directory");
         }
         File dst = new File(dstParent, src.getName());
         if (dst.exists()) {
@@ -274,7 +274,7 @@ public class StorageProvider extends DocumentsProvider {
         File src = resolve(sourceDocumentId);
         File dstParent = resolve(targetParentDocumentId);
         if (!dstParent.isDirectory()) {
-            throw new FileNotFoundException("Hedef klasör değil");
+            throw new FileNotFoundException("Target is not a directory");
         }
         File dst = uniqueFile(dstParent, src.getName());
         try {
@@ -286,7 +286,7 @@ public class StorageProvider extends DocumentsProvider {
         return childId(targetParentDocumentId, dst.getName());
     }
 
-    /** Alt kimlik, üst kimliğin altında mı? (Tree grant kontrolü için.) */
+    /** Is the document under the parent? (Used for tree grant checks.) */
     @Override
     public boolean isChildDocument(String parentDocumentId, String documentId) {
         if (parentDocumentId == null || documentId == null) {
@@ -301,7 +301,7 @@ public class StorageProvider extends DocumentsProvider {
     private static void copyRecursive(File src, File dst) throws IOException {
         if (src.isDirectory()) {
             if (!dst.exists() && !dst.mkdirs()) {
-                throw new IOException("Klasör oluşturulamadı: " + dst);
+                throw new IOException("Could not create directory: " + dst);
             }
             File[] children = src.listFiles();
             if (children != null) {

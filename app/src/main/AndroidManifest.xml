@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true">
 
-        <!-- Sistem picker'ının yerine geçen ekran. OPEN_DOCUMENT ve GET_CONTENT'e cevap verir. -->
+        <!-- Replaces the system picker. Answers OPEN_DOCUMENT and GET_CONTENT. -->
         <activity
             android:name=".PickerActivity"
             android:exported="true"
@@ -30,7 +30,7 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
 
-            <!-- Kaydetme: klasör seç, EXTRA_TITLE adıyla dosya oluştur -->
+            <!-- Save: pick a folder, create a file named EXTRA_TITLE -->
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_DOCUMENT" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -38,7 +38,7 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
 
-            <!-- Klasör seçimi (Lemuroid gibi uygulamalar bunu kullanır) -->
+            <!-- Folder selection (used by apps such as Lemuroid) -->
             <intent-filter>
                 <action android:name="android.intent.action.OPEN_DOCUMENT_TREE" />
                 <category android:name="android.intent.category.DEFAULT" />
@@ -46,12 +46,12 @@
         </activity>
 
         <!--
-          DocumentsProvider şartları (Android SAF belgelerindeki standart yapı):
-          - exported="true" zorunlu
-          - permission MANAGE_DOCUMENTS olmalı (framework bunu kontrol eder)
-          Bu izni normal uygulamalar alamaz, dolayısıyla dışarıdan doğrudan sorgulanamaz.
-          PickerActivity aynı uygulama olduğu için erişir; Lemuroid gibi uygulamalar
-          sadece picker'ın verdiği URI grant'iyle dosyaya ulaşır.
+          DocumentsProvider requirements (the standard setup from the Android SAF docs):
+          - exported="true" is required
+          - permission must be MANAGE_DOCUMENTS (the framework checks it)
+          Regular apps cannot hold this permission, so the provider cannot be queried directly from outside.
+          PickerActivity can reach it because it is part of the same app; apps such as Lemuroid
+          only reach files through the URI grant the picker hands out.
         -->
         <provider
             android:name=".StorageProvider"
