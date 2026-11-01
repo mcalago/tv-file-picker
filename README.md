@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/header.png" alt="TV File Picker" width="720"></p>
+
 # TV File Picker
 
 [Türkçe](README.tr.md) | **English**
@@ -7,6 +9,14 @@ system file picker (DocumentsUI). When an app fires `ACTION_OPEN_DOCUMENT`, `ACT
 `ACTION_OPEN_DOCUMENT_TREE` or `ACTION_CREATE_DOCUMENT`, this app answers.
 
 The UI follows the device language: English by default, Turkish included. More translations are welcome.
+
+## Screenshots
+
+Taken on a Google TV in Turkish; the UI follows the device language.
+
+| Setup guide | Folder picker |
+|---|---|
+| <img src="docs/screenshot-setup.png" width="420"> | <img src="docs/screenshot-picker.png" width="420"> |
 
 ## What it does
 

@@ -85,8 +85,10 @@ public class SetupActivity extends Activity {
         doneTitle.setVisibility(doneVisibility);
         doneDesc.setVisibility(doneVisibility);
 
-        // Put the focus on the next thing to do.
-        (access ? step2Button : step1Button).requestFocus();
+        // Put the focus on the next thing to do. Posted so it runs after the first layout pass;
+        // on a fresh start the system would otherwise assign focus afterwards and override this.
+        Button next = access ? step2Button : step1Button;
+        next.post(next::requestFocus);
     }
 
     private static void showStep(TextView badge, boolean done, String number) {

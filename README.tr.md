@@ -1,3 +1,5 @@
+<p align="center"><img src="docs/header.png" alt="TV File Picker" width="720"></p>
+
 # TV Dosya Seçici
 
 [English](README.md) | **Türkçe**
@@ -5,6 +7,12 @@
 Sistem dosya seçicisi (DocumentsUI) olmayan Android TV cihazlar için kumandayla kullanılabilen bir dosya seçici.
 Uygulamalar `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`, `ACTION_OPEN_DOCUMENT_TREE` ve `ACTION_CREATE_DOCUMENT`
 gönderdiğinde bu uygulama cevap verir.
+
+## Ekran görüntüleri
+
+| Kurulum rehberi | Klasör seçici |
+|---|---|
+| <img src="docs/screenshot-setup.png" width="420"> | <img src="docs/screenshot-picker.png" width="420"> |
 
 ## Ne yapar
 
