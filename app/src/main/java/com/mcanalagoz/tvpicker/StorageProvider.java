@@ -1,4 +1,4 @@
-package com.canalagoz.tvpicker;
+package com.mcanalagoz.tvpicker;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class StorageProvider extends DocumentsProvider {
 
-    public static final String AUTHORITY = "com.canalagoz.tvpicker.docs";
+    public static final String AUTHORITY = "com.mcanalagoz.tvpicker.docs";
     /** Key of the internal storage volume. */
     private static final String PRIMARY = "primary";
     /** Virtual top-level document that lists every mounted volume (used by our own picker). */

@@ -1,4 +1,4 @@
-package com.canalagoz.tvpicker;
+package com.mcanalagoz.tvpicker;
 
 import android.Manifest;
 import android.app.Activity;

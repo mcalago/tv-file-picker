@@ -42,7 +42,7 @@ tüm depolamayı göremez; sadece picker'ın verdiği izinle seçilen dosya/klas
 
 Kurulumdan sonra bilgisayara veya komut satırına gerek yok. TV'nde "tüm dosyalara erişim" ekranı yoksa uygulama
 bunu söyler; izin bir kez bilgisayardan verilebilir:
-`adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
+`adb shell appops set com.mcanalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
 
 ## Geliştirici kurulumu
 

@@ -49,7 +49,7 @@ cannot browse your storage; they only reach what the picker explicitly grants th
 
 No computer or command line is needed after the install. If your TV has no "all files access" screen,
 the app tells you, and the permission can be given once from a computer:
-`adb shell appops set com.canalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
+`adb shell appops set com.mcanalagoz.tvpicker MANAGE_EXTERNAL_STORAGE allow`
 
 ## Build (for developers)
 

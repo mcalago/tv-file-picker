@@ -80,7 +80,7 @@
         -->
         <provider
             android:name=".StorageProvider"
-            android:authorities="com.canalagoz.tvpicker.docs"
+            android:authorities="com.mcanalagoz.tvpicker.docs"
             android:exported="true"
             android:permission="android.permission.MANAGE_DOCUMENTS"
             android:grantUriPermissions="true">

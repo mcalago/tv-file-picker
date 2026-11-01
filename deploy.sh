@@ -5,7 +5,7 @@
 set -euo pipefail
 
 SERIAL="${1:-}"
-PKG="com.canalagoz.tvpicker"
+PKG="com.mcanalagoz.tvpicker"
 APK="app/build/outputs/apk/debug/app-debug.apk"
 
 if [[ -z "$SERIAL" ]]; then
