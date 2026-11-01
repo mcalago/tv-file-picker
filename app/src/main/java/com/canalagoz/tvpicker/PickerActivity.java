@@ -26,15 +26,15 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Sistem picker'ı olmayan Android TV'ler için SAF yerine geçen dosya seçici.
+ * File picker that stands in for the system SAF picker on Android TVs that lack one.
  *
  * Desteklenen intent'ler:
- *  - ACTION_OPEN_DOCUMENT / ACTION_GET_CONTENT : dosya seçimi (EXTRA_ALLOW_MULTIPLE, EXTRA_MIME_TYPES)
- *  - ACTION_OPEN_DOCUMENT_TREE                 : klasör seçimi (kalıcı izinli tree URI)
- *  - ACTION_CREATE_DOCUMENT                    : klasör seçip EXTRA_TITLE adıyla yeni dosya oluşturma
+ *  - ACTION_OPEN_DOCUMENT / ACTION_GET_CONTENT : pick files (EXTRA_ALLOW_MULTIPLE, EXTRA_MIME_TYPES)
+ *  - ACTION_OPEN_DOCUMENT_TREE                 : pick a folder (tree URI with persistable permission)
+ *  - ACTION_CREATE_DOCUMENT                    : pick a folder and create a new file named EXTRA_TITLE
  *
- * Kumanda: OK = klasöre gir / dosyayı işaretle, Geri = üst klasör (kökte iptal),
- *          Kanal +/- ve ileri/geri tuşları listede 15 öğe atlar.
+ * Remote: OK = open folder / mark file, Back = parent folder (cancel at the root),
+ *         Channel +/- and fast-forward/rewind keys jump 15 items.
  */
 public class PickerActivity extends Activity {
 
@@ -105,7 +105,7 @@ public class PickerActivity extends Activity {
         allowMultiple = mode == Mode.OPEN_FILE
                 && intent.getBooleanExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
 
-        // MIME filtresi: EXTRA_MIME_TYPES varsa onu, yoksa intent türünü kullan.
+        // MIME filter: use EXTRA_MIME_TYPES if present, otherwise the intent type.
         String[] extraMimes = intent.getStringArrayExtra(Intent.EXTRA_MIME_TYPES);
         if (extraMimes != null && extraMimes.length > 0) {
             mimeFilters.addAll(Arrays.asList(extraMimes));
@@ -117,7 +117,7 @@ public class PickerActivity extends Activity {
 
         suggestedName = intent.getStringExtra(Intent.EXTRA_TITLE);
         if (suggestedName == null || suggestedName.trim().isEmpty()) {
-            suggestedName = "yeni_dosya";
+            suggestedName = getString(R.string.default_file_name);
         }
 
         setupActionButton();
@@ -133,12 +133,12 @@ public class PickerActivity extends Activity {
     private void setupActionButton() {
         switch (mode) {
             case OPEN_TREE:
-                actionButton.setText("Bu klasörü seç");
+                actionButton.setText(R.string.btn_select_folder);
                 actionButton.setOnClickListener(v -> finishWithTree(currentDocId));
                 actionButton.setVisibility(View.VISIBLE);
                 break;
             case CREATE:
-                actionButton.setText("Buraya kaydet: " + suggestedName);
+                actionButton.setText(getString(R.string.btn_save_here, suggestedName));
                 actionButton.setOnClickListener(v -> createHere());
                 actionButton.setVisibility(View.VISIBLE);
                 break;
@@ -158,22 +158,20 @@ public class PickerActivity extends Activity {
     private void setupHint() {
         switch (mode) {
             case OPEN_TREE:
-                hintView.setText("Klasöre girip sağdaki düğmeyle seç.\nGeri: üst klasör");
+                hintView.setText(R.string.hint_pick_folder);
                 break;
             case CREATE:
-                hintView.setText("Klasöre girip sağdaki düğmeyle kaydet.\nGeri: üst klasör");
+                hintView.setText(R.string.hint_save_folder);
                 break;
             case OPEN_FILE:
             default:
-                hintView.setText(allowMultiple
-                        ? "OK: dosyayı işaretle / kaldır.\nİşaretledikten sonra onay düğmesine bas."
-                        : "OK: dosyayı seç.\nGeri: üst klasör");
+                hintView.setText(allowMultiple ? R.string.hint_multi : R.string.hint_single);
                 break;
         }
     }
 
     private void updateMultiButton() {
-        actionButton.setText("Seçilenleri onayla (" + selected.size() + ")");
+        actionButton.setText(getString(R.string.btn_confirm_selection, selected.size()));
     }
 
     private void load(String docId) {
@@ -191,14 +189,14 @@ public class PickerActivity extends Activity {
                         String name = c.getString(c.getColumnIndexOrThrow(Document.COLUMN_DISPLAY_NAME));
                         String mime = c.getString(c.getColumnIndexOrThrow(Document.COLUMN_MIME_TYPE));
                         Entry e = new Entry(id, name, mime);
-                        // Klasör ve kaydet modlarında dosyalar bağlam için görünür (seçilemez).
+                        // In folder and save modes files are shown for context only (not selectable).
                         if (e.dir || mode != Mode.OPEN_FILE || matchesAnyFilter(mime)) {
                             loaded.add(e);
                         }
                     }
                 }
             } catch (RuntimeException ex) {
-                runOnUiThread(() -> Toast.makeText(this, "Klasör okunamadı", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, R.string.toast_read_failed, Toast.LENGTH_SHORT).show());
             }
 
             runOnUiThread(() -> show(loaded));
@@ -209,7 +207,7 @@ public class PickerActivity extends Activity {
         entries.clear();
         entries.addAll(loaded);
         upButton.setEnabled(parentOf(currentDocId) != null);
-        countView.setText(entries.size() + " öğe");
+        countView.setText(getResources().getQuantityString(R.plurals.item_count, entries.size(), entries.size()));
         refreshLabels();
         emptyView.setVisibility(entries.isEmpty() ? View.VISIBLE : View.GONE);
         listView.requestFocus();
@@ -225,7 +223,7 @@ public class PickerActivity extends Activity {
         }
     }
 
-    /** "primary:Download/psp" -> "primary:Download"; kökte null. */
+    /** "primary:Download/psp" -> "primary:Download"; null at the root. */
     private static String parentOf(String docId) {
         String rel = docId.replaceFirst("^primary:", "");
         if (rel.isEmpty()) {
@@ -242,7 +240,7 @@ public class PickerActivity extends Activity {
         }
     }
 
-    /** Kumandayla gezilebilir satırlar: rozet (KLASÖR / DOSYA / SEÇİLDİ), ad ve kısa açıklama. */
+    /** Remote-navigable rows: badge (FOLDER / FILE / SELECTED), name and a short hint. */
     private class EntryAdapter extends BaseAdapter {
         @Override
         public int getCount() {
@@ -273,25 +271,25 @@ public class PickerActivity extends Activity {
             name.setText(e.name);
 
             if (e.dir) {
-                badge.setText("KLASÖR");
-                meta.setText("Açmak için OK");
+                badge.setText(R.string.badge_folder);
+                meta.setText(R.string.meta_open);
             } else if (mode != Mode.OPEN_FILE) {
-                badge.setText("DOSYA");
-                meta.setText("Bu modda seçilemez");
+                badge.setText(R.string.badge_file);
+                meta.setText(R.string.meta_not_selectable);
             } else if (allowMultiple && selected.contains(e.docId)) {
-                badge.setText("SEÇİLDİ");
-                meta.setText("Kaldırmak için tekrar OK");
+                badge.setText(R.string.badge_selected);
+                meta.setText(R.string.meta_deselect);
             } else {
-                badge.setText("DOSYA");
-                meta.setText(allowMultiple ? "Eklemek için OK" : "Seçmek için OK");
+                badge.setText(R.string.badge_file);
+                meta.setText(allowMultiple ? R.string.meta_add : R.string.meta_select);
             }
             return row;
         }
     }
 
     /**
-     * Birden fazla MIME türünü destekler: "*\/*" (hepsi), "image/*" (tür ailesi),
-     * tam eşleşmeler. EXTRA_MIME_TYPES içinde herhangi biri eşleşirse dosya gösterilir.
+     * Supports several MIME types: "*\/*" (all), "image/*" (type family),
+     * and exact matches. A file is shown if any entry in EXTRA_MIME_TYPES matches.
      */
     private boolean matchesAnyFilter(String mime) {
         if (mime == null) {
@@ -320,7 +318,7 @@ public class PickerActivity extends Activity {
         }
 
         if (mode != Mode.OPEN_FILE) {
-            Toast.makeText(this, "Bu modda sadece klasör seçilir", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_folders_only), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -337,15 +335,15 @@ public class PickerActivity extends Activity {
 
     private void finishWithFiles() {
         if (selected.isEmpty()) {
-            Toast.makeText(this, "En az bir dosya işaretle", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_select_at_least_one), Toast.LENGTH_SHORT).show();
             return;
         }
         finishWithFiles(new ArrayList<>(selected));
     }
 
     /**
-     * Dosya sonucu. Birden fazla dosya varsa ClipData ile hepsi döner; ilk dosya
-     * getData() ile de verilir (tek dosya bekleyen uygulamalar için).
+     * File result. With several files all are returned through ClipData; the first
+     * is also returned via getData() (for apps that expect a single file).
      */
     private void finishWithFiles(List<String> docIds) {
         Uri first = DocumentsContract.buildDocumentUri(StorageProvider.AUTHORITY, docIds.get(0));
@@ -367,10 +365,10 @@ public class PickerActivity extends Activity {
     }
 
     /**
-     * Klasör seçildiğinde tree URI döner. Okuma + yazma + prefix + kalıcı izin:
-     *  - PREFIX: klasör altındaki tüm URI'ler (…/children dahil) okunabilsin.
-     *  - PERSISTABLE + READ+WRITE: Lemuroid gibi uygulamalar takePersistableUriPermission
-     *    çağırabilsin.
+     * Returns a tree URI when a folder is chosen. Read + write + prefix + persistable grant:
+     *  - PREFIX: every URI under the folder (including …/children) is readable.
+     *  - PERSISTABLE + READ+WRITE: apps such as Lemuroid can
+     *    call takePersistableUriPermission.
      */
     private void finishWithTree(String docId) {
         Uri treeUri = DocumentsContract.buildTreeDocumentUri(StorageProvider.AUTHORITY, docId);
@@ -386,18 +384,18 @@ public class PickerActivity extends Activity {
         finish();
     }
 
-    /** Ad girmek için küçük bir pencere. Klavyedeki onay tuşu "Oluştur"u tetikler. */
+    /** Small name-entry dialog. The keyboard's done key triggers "Create". */
     private void askNewFolderName() {
         final android.widget.EditText input = new android.widget.EditText(this);
-        input.setHint("Klasör adı");
+        input.setHint(R.string.dialog_folder_name);
         input.setSingleLine(true);
         input.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(this)
-                .setTitle("Yeni klasör")
+                .setTitle(R.string.dialog_new_folder)
                 .setView(input)
-                .setPositiveButton("Oluştur", (d, w) -> createFolder(input.getText().toString().trim()))
-                .setNegativeButton("İptal", null)
+                .setPositiveButton(R.string.dialog_create, (d, w) -> createFolder(input.getText().toString().trim()))
+                .setNegativeButton(R.string.dialog_cancel, null)
                 .create();
 
         input.setOnEditorActionListener((v, actionId, event) -> {
@@ -414,10 +412,10 @@ public class PickerActivity extends Activity {
         input.requestFocus();
     }
 
-    /** Mevcut klasörün altında yeni klasör oluşturur (SAF createDocument, DIR). */
+    /** Creates a new folder under the current one (SAF createDocument, DIR). */
     private void createFolder(String name) {
         if (name.isEmpty()) {
-            Toast.makeText(this, "Ad boş olamaz", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_name_empty), Toast.LENGTH_SHORT).show();
             return;
         }
         new Thread(() -> {
@@ -427,18 +425,18 @@ public class PickerActivity extends Activity {
                         getContentResolver(), parent, Document.MIME_TYPE_DIR, name);
                 runOnUiThread(() -> {
                     Toast.makeText(this,
-                            created == null ? "Klasör oluşturulamadı" : "Klasör oluşturuldu: " + name,
+                            created == null ? getString(R.string.toast_folder_failed) : getString(R.string.toast_folder_created, name),
                             Toast.LENGTH_SHORT).show();
                     load(currentDocId);
                 });
             } catch (Exception ex) {
                 runOnUiThread(() -> Toast.makeText(this,
-                        "Hata: " + ex.getMessage(), Toast.LENGTH_LONG).show());
+                        getString(R.string.toast_error, ex.getMessage()), Toast.LENGTH_LONG).show());
             }
         }).start();
     }
 
-    /** ACTION_CREATE_DOCUMENT: mevcut klasörde EXTRA_TITLE adıyla yeni dosya oluşturur. */
+    /** ACTION_CREATE_DOCUMENT: creates a new file named EXTRA_TITLE in the current folder. */
     private void createHere() {
         String mime = getIntent().getType();
         if (mime == null || mime.isEmpty()) {
@@ -453,14 +451,14 @@ public class PickerActivity extends Activity {
                         getContentResolver(), parent, finalMime, suggestedName);
                 runOnUiThread(() -> {
                     if (created == null) {
-                        Toast.makeText(this, "Dosya oluşturulamadı", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, getString(R.string.toast_file_failed), Toast.LENGTH_SHORT).show();
                     } else {
                         finishWithCreated(created);
                     }
                 });
             } catch (Exception ex) {
                 runOnUiThread(() -> Toast.makeText(this,
-                        "Kaydedilemedi: " + ex.getMessage(), Toast.LENGTH_LONG).show());
+                        getString(R.string.toast_save_failed, ex.getMessage()), Toast.LENGTH_LONG).show());
             }
         }).start();
     }
@@ -475,7 +473,7 @@ public class PickerActivity extends Activity {
         finish();
     }
 
-    /** Kumanda kısayolları: kanal +/- ve ileri/geri tuşları listede 15 öğe atlatır. */
+    /** Remote shortcuts: channel +/- and fast-forward/rewind keys jump 15 items. */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         int jump = 0;

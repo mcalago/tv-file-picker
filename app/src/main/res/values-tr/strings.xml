@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TV Dosya Seçici</string>
+    <string name="picker_root_title">Depolama</string>
+    <string name="picker_empty">Bu klasörde gösterilecek dosya yok</string>
+
+    <string name="btn_up">Üst klasör</string>
+    <string name="btn_new_folder">+ Yeni klasör</string>
+    <string name="btn_select_folder">Bu klasörü seç</string>
+    <string name="btn_save_here">Buraya kaydet: %1$s</string>
+    <string name="btn_confirm_selection">Seçilenleri onayla (%1$d)</string>
+    <string name="default_file_name">yeni_dosya</string>
+
+    <string name="hint_pick_folder">Klasöre girip sağdaki düğmeyle seç.\nGeri: üst klasör</string>
+    <string name="hint_save_folder">Klasöre girip sağdaki düğmeyle kaydet.\nGeri: üst klasör</string>
+    <string name="hint_multi">OK: dosyayı işaretle / kaldır.\nİşaretledikten sonra onay düğmesine bas.</string>
+    <string name="hint_single">OK: dosyayı seç.\nGeri: üst klasör</string>
+
+    <plurals name="item_count">
+        <item quantity="one">%1$d öğe</item>
+        <item quantity="other">%1$d öğe</item>
+    </plurals>
+
+    <string name="badge_folder">KLASÖR</string>
+    <string name="badge_file">DOSYA</string>
+    <string name="badge_selected">SEÇİLDİ</string>
+    <string name="meta_open">Açmak için OK</string>
+    <string name="meta_not_selectable">Bu modda seçilemez</string>
+    <string name="meta_deselect">Kaldırmak için tekrar OK</string>
+    <string name="meta_add">Eklemek için OK</string>
+    <string name="meta_select">Seçmek için OK</string>
+
+    <string name="toast_read_failed">Klasör okunamadı</string>
+    <string name="toast_folders_only">Bu modda sadece klasör seçilir</string>
+    <string name="toast_select_at_least_one">En az bir dosya işaretle</string>
+    <string name="toast_name_empty">Ad boş olamaz</string>
+    <string name="toast_folder_failed">Klasör oluşturulamadı</string>
+    <string name="toast_folder_created">Klasör oluşturuldu: %1$s</string>
+    <string name="toast_file_failed">Dosya oluşturulamadı</string>
+    <string name="toast_error">Hata: %1$s</string>
+    <string name="toast_save_failed">Kaydedilemedi: %1$s</string>
+
+    <string name="dialog_folder_name">Klasör adı</string>
+    <string name="dialog_new_folder">Yeni klasör</string>
+    <string name="dialog_create">Oluştur</string>
+    <string name="dialog_cancel">İptal</string>
+</resources>

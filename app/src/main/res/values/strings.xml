@@ -1,6 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TV Dosya Seçici</string>
-    <string name="picker_root_title">Depolama</string>
-    <string name="picker_empty">Bu klasörde gösterilecek dosya yok</string>
+    <string name="app_name">TV File Picker</string>
+    <string name="picker_root_title">Storage</string>
+    <string name="picker_empty">No files to show in this folder</string>
+
+    <string name="btn_up">Up</string>
+    <string name="btn_new_folder">+ New folder</string>
+    <string name="btn_select_folder">Select this folder</string>
+    <string name="btn_save_here">Save here: %1$s</string>
+    <string name="btn_confirm_selection">Confirm selection (%1$d)</string>
+    <string name="default_file_name">new_file</string>
+
+    <string name="hint_pick_folder">Open a folder, then use the button on the right to select it.\nBack: parent folder</string>
+    <string name="hint_save_folder">Open a folder, then use the button on the right to save.\nBack: parent folder</string>
+    <string name="hint_multi">OK: select / deselect a file.\nThen press the confirm button.</string>
+    <string name="hint_single">OK: select the file.\nBack: parent folder</string>
+
+    <plurals name="item_count">
+        <item quantity="one">%1$d item</item>
+        <item quantity="other">%1$d items</item>
+    </plurals>
+
+    <string name="badge_folder">FOLDER</string>
+    <string name="badge_file">FILE</string>
+    <string name="badge_selected">SELECTED</string>
+    <string name="meta_open">Press OK to open</string>
+    <string name="meta_not_selectable">Can\'t be selected in this mode</string>
+    <string name="meta_deselect">Press OK again to remove</string>
+    <string name="meta_add">Press OK to add</string>
+    <string name="meta_select">Press OK to select</string>
+
+    <string name="toast_read_failed">Couldn\'t read this folder</string>
+    <string name="toast_folders_only">Only folders can be selected in this mode</string>
+    <string name="toast_select_at_least_one">Select at least one file</string>
+    <string name="toast_name_empty">Name can\'t be empty</string>
+    <string name="toast_folder_failed">Couldn\'t create the folder</string>
+    <string name="toast_folder_created">Folder created: %1$s</string>
+    <string name="toast_file_failed">Couldn\'t create the file</string>
+    <string name="toast_error">Error: %1$s</string>
+    <string name="toast_save_failed">Couldn\'t save: %1$s</string>
+
+    <string name="dialog_folder_name">Folder name</string>
+    <string name="dialog_new_folder">New folder</string>
+    <string name="dialog_create">Create</string>
+    <string name="dialog_cancel">Cancel</string>
 </resources>
