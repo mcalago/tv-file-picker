@@ -62,10 +62,17 @@ Never commit `tvpicker.jks` or the passwords.
 |---|---|
 | PPSSPP | Verified: folder selection, settings, in-game saves, save state save/load |
 | Lemuroid | Verified: folder selection and opening games (ROM reading) |
-| RetroArch | Uses its own file browser, so it does not need this picker |
+| RetroArch | Verified: folder selection lists the folder and its files (press "Always" in the chooser, see Troubleshooting) |
 | Saving (`CREATE_DOCUMENT`) | Implemented, not yet tested |
 
 If you try another app, please open an issue with the app name, version, intent and logcat output.
+
+## Troubleshooting
+
+**The app opens a chooser with "TV File Picker" and "Activity Stub", and RetroArch shows nothing after I pick a folder.**
+Many Google TV builds ship an empty placeholder that also answers file-picker intents, so Android asks which one to use.
+If you pick "Just once", some apps (RetroArch, for example) never receive the result. Choose **TV File Picker** and
+press **Always** once; after that the picker is launched directly and works.
 
 ## Limitations
 

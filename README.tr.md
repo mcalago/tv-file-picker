@@ -58,10 +58,17 @@ export TVPICKER_KEY_PASS=...
 |---|---|
 | Lemuroid | Klasör seçimi ve oyun açma doğrulandı (ROM okuma) |
 | PPSSPP | Doğrulandı: klasör seçimi, ayarlar, oyun içi kayıt ve save state kaydet/yükle |
-| RetroArch | Kendi dosya tarayıcısını kullanır, bu picker'a gerek yok |
+| RetroArch | Doğrulandı: klasör seçimi klasörü ve dosyalarını listeler (seçim penceresinde "Her zaman"a bas, bkz. Sorun giderme) |
 | Kaydetme (`CREATE_DOCUMENT`) | Kodda var, test edilecek |
 
 Yeni bir uygulamayla denediysen sonucu bir issue aç: uygulama adı, sürüm, intent ve logcat çıktısıyla.
+
+## Sorun giderme
+
+**Önüme "TV Dosya Seçici" ve "Activity Stub" seçenekleri çıkıyor, klasör seçtikten sonra RetroArch'ta bir şey olmuyor.**
+Birçok Google TV'de dosya seçici isteklerine de cevap veren boş bir yer tutucu var, bu yüzden Android hangisini
+kullanacağını soruyor. "Yalnızca bir defa" dersen bazı uygulamalar (örneğin RetroArch) sonucu hiç almıyor.
+**TV Dosya Seçici**'yi seçip bir kez **Her zaman**'a bas; sonrasında picker doğrudan açılır ve çalışır.
 
 ## Sınırlar
 
