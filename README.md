@@ -1,16 +1,34 @@
-<p align="center"><img src="docs/header.png" alt="TV File Picker" width="720"></p>
 
-# TV File Picker
+<p align="center">
+  <img src="docs/header.png" alt="TV File Picker" width="720">
+</p>
 
-[Türkçe](README.tr.md) | **English**
+<h1 align="center">TV File Picker</h1>
 
-A remote-friendly file picker and storage provider for Android / Google TV devices that ship without the
-system file picker (DocumentsUI). When an app fires `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`,
-`ACTION_OPEN_DOCUMENT_TREE` or `ACTION_CREATE_DOCUMENT`, this app answers.
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.mcanalagoz.tvpicker">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+         alt="Get it on Google Play" height="80">
+  </a>
+</p>
+
+<p align="center">
+  <strong>Available on Google Play</strong><br>
+  Install directly on your Android TV or Google TV device.
+</p>
+
+<p align="center">
+  <a href="https://github.com/mcalago/tv-file-picker/releases">Download APK from GitHub Releases</a>
+  ·
+  <a href="README.tr.md">Türkçe</a>
+</p>
+
+A remote-friendly file picker and storage provider for Android / Google TV devices that ship without the system file picker (DocumentsUI). When an app fires `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`, `ACTION_OPEN_DOCUMENT_TREE` or `ACTION_CREATE_DOCUMENT`, this app answers.
 
 The UI follows the device language: English by default, Turkish included. More translations are welcome.
 
 ## Screenshots
+
 
 Taken on a Google TV in Turkish; the UI follows the device language.
 
