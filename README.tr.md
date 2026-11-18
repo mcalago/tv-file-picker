@@ -1,14 +1,34 @@
-<p align="center"><img src="docs/header.png" alt="TV File Picker" width="720"></p>
 
-# TV Dosya Seçici
+<p align="center">
+  <img src="docs/header.png" alt="TV File Picker" width="720">
+</p>
 
-[English](README.md) | **Türkçe**
+<h1 align="center">TV File Picker</h1>
 
-Sistem dosya seçicisi (DocumentsUI) olmayan Android TV cihazlar için kumandayla kullanılabilen bir dosya seçici.
-Uygulamalar `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`, `ACTION_OPEN_DOCUMENT_TREE` ve `ACTION_CREATE_DOCUMENT`
-gönderdiğinde bu uygulama cevap verir.
+<p align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.mcanalagoz.tvpicker">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+         alt="Google Play'den edinin" height="80">
+  </a>
+</p>
 
-## Ekran görüntüleri
+<p align="center">
+  <strong>Google Play'de ücretsiz!</strong><br>
+  Android TV veya Google TV cihazınıza doğrudan yükleyin.
+</p>
+
+<p align="center">
+  <a href="https://github.com/mcalago/tv-file-picker/releases">APK'yı GitHub Releases üzerinden indirin</a>
+  ·
+  <a href="README.md">English</a>
+</p>
+
+Android TV ve Google TV cihazlarında sistem dosya seçicisi (DocumentsUI) bulunmadığında devreye giren, kumandayla kolayca kullanılabilen bir dosya seçici ve depolama sağlayıcısıdır. Bir uygulama `ACTION_OPEN_DOCUMENT`, `ACTION_GET_CONTENT`, `ACTION_OPEN_DOCUMENT_TREE` veya `ACTION_CREATE_DOCUMENT` çağrısı yaptığında bu uygulama isteği karşılar.
+
+Arayüz cihazın dilini takip eder. Varsayılan dil İngilizcedir, Türkçe de desteklenmektedir. Yeni çevirilere katkılarınızı bekliyoruz.
+
+## Ekran Görüntüleri
+
 
 | Kurulum rehberi | Klasör seçici |
 |---|---|
